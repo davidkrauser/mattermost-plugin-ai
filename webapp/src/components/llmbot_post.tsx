@@ -96,6 +96,8 @@ export interface PostUpdateWebsocketMessage {
     next: string
     post_id: string
     control?: string
+    message?: string
+    post?: string
 }
 
 interface Props {

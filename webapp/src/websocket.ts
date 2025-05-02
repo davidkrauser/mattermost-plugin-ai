@@ -4,6 +4,7 @@
 import {WebSocketMessage} from '@mattermost/client';
 
 import {PostUpdateWebsocketMessage} from './components/llmbot_post';
+
 import {PostEditedWebsocketEvent} from './index';
 
 type WebsocketListener = (msg: WebSocketMessage<PostUpdateWebsocketMessage>) => void
@@ -33,7 +34,7 @@ export default class PostEventListener {
         let postID: string;
         if (msg.event === PostEditedWebsocketEvent) {
             try {
-                const post = JSON.parse(msg.data.post);
+                const post = JSON.parse(msg.data.post ?? '{}');
                 postID = post.id;
                 msg.data = post;
             } catch (e) {
