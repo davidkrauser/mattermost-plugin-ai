@@ -29,7 +29,19 @@ export default class PostEventListener {
     };
 
     public handlePostUpdateWebsockets = (msg: WebSocketMessage<PostUpdateWebsocketMessage>) => {
-        const postID = msg.data.post_id;
+        let postID: string;
+        if (msg.event === 'post_edited') {
+            try {
+                const post = JSON.parse(msg.data.post);
+                postID = post.id;
+                msg.data = post;
+            } catch (e) {
+                // ignore malformed post_edited message
+                return;
+            }
+        } else {
+            postID = msg.data.post_id;
+        }
         this.postUpdateWebsocketListeners.forEach((listenerObject) => {
             if (listenerObject.postID === postID) {
                 listenerObject.listener(msg);
